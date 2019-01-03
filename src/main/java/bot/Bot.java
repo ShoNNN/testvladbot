@@ -103,20 +103,20 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    /**
-     * Метод для настройки сообщения и его отправки.
-     *
-     * @param chatId id чата
-     * @param s      Строка, которую необходимот отправить в качестве сообщения.
-     */
-
-    public synchronized void sendMsg(String chatId, String s) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(s);
-        sendMessage.setText("Привет!");
-    }
+//    /**
+//     * Метод для настройки сообщения и его отправки.
+//     *
+//     * @param chatId id чата
+//     * @param s      Строка, которую необходимот отправить в качестве сообщения.
+//     */
+//
+//    public synchronized void sendMsg(String chatId, String s) {
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.enableMarkdown(true);
+//        sendMessage.setChatId(chatId);
+//        sendMessage.setText(s);
+//        sendMessage.setText("Привет!");
+//    }
 
     @SuppressWarnings("deprecation") // Означает то, что в новых версиях метод уберут или заменят
     private void sendMsg(Message msg, String text) {
