@@ -7,54 +7,53 @@ import org.telegram.telegrambots.ApiContextInitializer;
 //import org.telegram.telegrambots.TelegramBotsApi;
 //import org.telegram.telegrambots.api.methods.send.SendMessage;
 //import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 //import org.telegram.telegrambots.exceptions.TelegramApiException;
 //import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
-import org.telegram.telegrambots.meta.ApiContext;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import sun.net.SocksProxy;
+//import org.telegram.telegrambots.meta.ApiContext;
+//import org.telegram.telegrambots.meta.TelegramBotsApi;
+//import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+//import org.telegram.telegrambots.meta.api.objects.Message;
+//import org.telegram.telegrambots.meta.api.objects.Update;
+//import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+//import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+//import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+//import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+//import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
+import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Bot extends TelegramLongPollingBot {
 
-    Bot(){}
+    Logger log = Logger.getLogger(Logger.class.getName());
 
+    /** default constructor */
+    Bot() {
+    }
+
+    /** constructor with options */
     Bot(DefaultBotOptions options) {
         super(options);
     }
 
-    Logger log = Logger.getLogger(Logger.class.getName());
-
-    static String PROXY_HOST = "157.230.24.65" /* proxy host */;
-    static Integer PROXY_PORT = 80 /* proxy port */;
-
     public static void main(String[] args) {
 
-//        makeProxy();
         makeBot();
 
     }
 
-    public static void makeProxy(){
-        System.getProperties().put( "proxySet", "true" );
-        System.getProperties().put( "socksProxyHost", "127.0.0.1" );
-        System.getProperties().put( "socksProxyPort", "9150" );
-
-    }
-
-    public static void makeBot(){
+    public static void makeBot() {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
@@ -65,65 +64,105 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public static void makeProxyBot(){
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-
-        // Set up Http proxy
-        DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-
-        HttpHost httpHost = new HttpHost(PROXY_HOST, PROXY_PORT);
-
-        RequestConfig requestConfig = RequestConfig.custom().setProxy(httpHost).setAuthenticationEnabled(false).build();
-        botOptions.setRequestConfig(requestConfig);
-        botOptions.setProxyHost(PROXY_HOST);
-        botOptions.setProxyPort(PROXY_PORT);
-
-
-        try {
-            telegramBotsApi.registerBot(new Bot(botOptions));
-        } catch (TelegramApiRequestException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Bot getBot(){
-        return new Bot();
-    }
-
     /**
      * Метод для приема сообщений.
+     *
      * @param update Содержит сообщение от пользователя.
      */
 
+//    public void onUpdateReceived(Update update) {
+//        String message = update.getMessage().getText();
+//        sendMsg(update.getMessage().getChatId().toString(), message);
+//    }
+
     public void onUpdateReceived(Update update) {
-        String message = update.getMessage().getText();
-        sendMsg(update.getMessage().getChatId().toString(), message);
+        Message msg = update.getMessage(); // Это нам понадобится
+        String txt = msg.getText();
+        if (txt.equals("/start")) {
+            sendMsg(msg, "Привет! Меня зовут " + getBotUsername() + " А как твоё имя?");
 
-
+        }
+        String name = msg.getText();
+        if (!name.isEmpty() && !name.equals("/start")
+                && !txt.equals("Хорошо")
+                && !txt.equals("Отлично")
+                && !txt.equals("Плохо")){
+            sendMsg(msg, "Привет! "+ getClientName(name) +". теперь я могу немного больше!");
+            sendMsg(msg, "как у тебя дела?");
+        }
+        switch (msg.getText()){
+            case "Хорошо":
+                sendMsg(msg, "Молодец, у меня тоже");
+                break;
+            case "Отлично":
+                sendMsg(msg, "Так держать!");
+                break;
+            case "Плохо":
+                sendMsg(msg, "и такое бывает :D");
+                break;
+        }
     }
 
     /**
      * Метод для настройки сообщения и его отправки.
+     *
      * @param chatId id чата
-     * @param s Строка, которую необходимот отправить в качестве сообщения.
+     * @param s      Строка, которую необходимот отправить в качестве сообщения.
      */
 
     public synchronized void sendMsg(String chatId, String s) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
-//        sendMessage.setText(s);
+        sendMessage.setText(s);
         sendMessage.setText("Привет!");
-        setButtons(sendMessage);
-//        try {
-//            sendMessage(sendMessage);
-//        } catch (TelegramApiException ex) {
-//            log.log(Level.SEVERE, "Exception: ", ex.toString());
-//        }
+    }
+
+    @SuppressWarnings("deprecation") // Означает то, что в новых версиях метод уберут или заменят
+    private void sendMsg(Message msg, String text) {
+        SendMessage s = new SendMessage();
+        s.enableMarkdown(true);
+
+        //создаём клавиатуру
+        ReplyKeyboardMarkup replyKeyBoadrdMarkup = new ReplyKeyboardMarkup();
+        s.setReplyMarkup(replyKeyBoadrdMarkup);
+        replyKeyBoadrdMarkup.setSelective(true);
+        replyKeyBoadrdMarkup.setResizeKeyboard(true);
+        replyKeyBoadrdMarkup.setOneTimeKeyboard(false);
+
+        //создайм список клавиатуры
+        List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
+
+        //первая строчка клавиатуры
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+
+        //добавляем клавиши
+        keyboardFirstRow.add("Отлично");
+        keyboardSecondRow.add("Хорошо");
+        keyboardThirdRow.add("Плохо");
+
+        //добавляем спислк в клавиатуру
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        //устанавливаем этот список на нашу клавиатуру
+        replyKeyBoadrdMarkup.setKeyboard(keyboard);
+
+        s.setChatId(msg.getChatId().toString()); // Боту может писать не один человек, и поэтому чтобы отправить сообщение, грубо говоря нужно узнать куда его отправлять
+        s.setText(text);
+        try { //Чтобы не крашнулась программа при вылете Exception
+            sendMessage(s);
+        } catch (TelegramApiException ex){
+            ex.printStackTrace();
+        }
     }
 
     /**
      * Метод возвращает имя бота, указанное при регистрации.
+     *
      * @return имя бота
      */
 
@@ -133,6 +172,7 @@ public class Bot extends TelegramLongPollingBot {
 
     /**
      * Метод возвращает token бота для связи с сервером Telegram
+     *
      * @return token для бота
      */
 
@@ -140,32 +180,10 @@ public class Bot extends TelegramLongPollingBot {
         return "776333607:AAEugu2_Gm_wEB8GK-9N7W0UR_anh4iXN9E";
     }
 
-    public synchronized void setButtons(SendMessage sendMessage) {
-        // Создаем клавиуатуру
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        // Создаем список строк клавиатуры
-        List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
-
-        // Первая строчка клавиатуры
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-        // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton("Привет"));
-
-        // Вторая строчка клавиатуры
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add(new KeyboardButton("Помощь"));
-
-        // Добавляем все строчки клавиатуры в список
-        keyboard.add(keyboardFirstRow);
-        keyboard.add(keyboardSecondRow);
-        // и устанваливаем этот список нашей клавиатуре
-        replyKeyboardMarkup.setKeyboard(keyboard);
+    public String getClientName(String clientName) {
+        //Message msg = update.getMessage();
+        //String clientName = msg.getText();
+        return clientName;
     }
 
 }
