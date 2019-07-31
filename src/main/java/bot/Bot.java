@@ -127,7 +127,7 @@ public class Bot extends TelegramLongPollingBot {
         // Вторая строчка клавиатуры
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add(new KeyboardButton("Помощь"));
+        keyboardSecondRow.add(new KeyboardButton("Help!"));
 
         // Добавляем все строчки клавиатуры в список
         keyboard.add(keyboardFirstRow);
