@@ -62,6 +62,7 @@ public class Bot extends TelegramLongPollingBot {
             sendMsg(update.getMessage().getChatId().toString(), expenses.getLast());
         } else {
             expenses.addExpense(message);
+            sendMsg(update.getMessage().getChatId().toString(), "Добавлены траты" + message);
         }
 //        sendMsg(update.getMessage().getChatId().toString(), message);
 

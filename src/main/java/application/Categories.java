@@ -1,5 +1,7 @@
 package application;
 
+import bot.DBClient;
+
 public class Categories {
 
     String codename;
