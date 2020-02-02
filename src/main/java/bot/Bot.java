@@ -56,9 +56,13 @@ public class Bot extends TelegramLongPollingBot {
      */
 
     public void onUpdateReceived(Update update) {
-        String message = update.getMessage().getText();
         Expenses expenses = new Expenses();
-        expenses.addExpense(message);
+        String message = update.getMessage().getText();
+        if (message.equals("/expenses")){
+            sendMsg(update.getMessage().getChatId().toString(), expenses.getLast());
+        } else {
+            expenses.addExpense(message);
+        }
 //        sendMsg(update.getMessage().getChatId().toString(), message);
 
 

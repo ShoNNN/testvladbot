@@ -3,10 +3,7 @@ package bot;
 import application.Expenses;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 public class DBClient {
 
@@ -15,9 +12,10 @@ public class DBClient {
     static  ResultSet rs = null;
 
     public static void main(String[] args) {
-
+//
         Expenses expenses = new Expenses();
-        expenses.addExpense("1234 coffee");
+//        expenses.addExpense("1234 coffee");
+        System.out.println(expenses.getLast());
 
 //        System.out.println(getLastIndex("expense"));
 //        insert("expense", "123", "2020-01-31 14:55:21", "dinner");
@@ -28,7 +26,7 @@ public class DBClient {
 
     }
 
-    /* дописать возвращаемое значение, и сейчас селектится все плохо */
+    /* не работает как нужно. дописать возвращаемое значение, и сейчас селектится все плохо */
     public static void select(String tableName, String...values) {
         try {
             c = ConnectDatabse.getConnection();
@@ -50,6 +48,42 @@ public class DBClient {
         System.out.println("Select was successfully");
     }
 
+    public static String selectGetLast10Expense() {
+        String result = null;
+        try {
+            c = ConnectDatabse.getConnection();
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            String sql = "select e.id, e.amount, c.name\n" +
+                    " from expense e left join category c\n" +
+                    " on c.codename=e.category_codename \n" +
+                    " order by created desc limit 10";
+            stmt.executeQuery(sql);
+            rs = stmt.getResultSet();
+
+            String [] amount = null;
+            String [] categoryName = null;
+            StringBuilder stringBuilder = new StringBuilder();
+            while (rs.next()) {
+                amount = rs.getString(2).split(" ");
+                categoryName = rs.getString(3).split(" ");
+                stringBuilder.append("потрачено " + amount[0] + " на " + categoryName[0] + "\n");
+            }
+
+            result = stringBuilder.toString();
+            stmt.close();
+            c.commit();
+        } catch (Exception e) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Select was successfully");
+        return result;
+    }
+
+    /* работает */
     public static void insert(String tableName, String...values ) {
         try {
             c = ConnectDatabse.getConnection();
@@ -70,7 +104,7 @@ public class DBClient {
         System.out.println("Records created successfully");
     }
 
-    public static void delete(String tableName, int rowId){
+    public static void deleteById(String tableName, int rowId){
         try {
             c = ConnectDatabse.getConnection();
             c.setAutoCommit(false);
@@ -89,6 +123,8 @@ public class DBClient {
         System.out.println("Delete was successfully");
     }
 
+    /* почти работает, нужно сделать нормальный форма возвращаемого значения
+     * Логику можно применить к методу select() */
     public static void fetchAll(String tableName, String... columns){
         StringBuilder stringBuilder = new StringBuilder();
         ArrayList<String[]> result = new ArrayList<>();

@@ -1,7 +1,6 @@
-application/Server.class
-bot/Bot.class
-bot/PingIP.class
 bot/DBClient.class
 bot/ConnectDatabse.class
 application/Categories.class
+bot/Bot.class
 application/Expenses.class
+bot/PingIP.class

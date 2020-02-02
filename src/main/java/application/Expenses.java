@@ -12,7 +12,6 @@ public class Expenses {
     String categoryText;
 
     public void addExpense(String str){
-
         DBClient.insert("expense", parseAmount(str), getNowFormatted(), parseCategoryName(str));
     }
 
@@ -24,21 +23,22 @@ public class Expenses {
 
     }
 
-    public void getLast(){
-
+    public String getLast(){
+        return DBClient.selectGetLast10Expense();
     }
 
-    public void deleteExpense(){
-
+    public void deleteExpense(int id){
+        DBClient.deleteById("expense", id);
     }
 
-    /* return today date */
+    /* return today datetime */
     public String getNowFormatted(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return simpleDateFormat.format(new Date());
     }
 
+    /* ----- переписать на один метод с тернарным оператором -----*/
     public static String parseAmount(String text){
         String amount = null;
         Pattern pattern = Pattern.compile("\\d+");
