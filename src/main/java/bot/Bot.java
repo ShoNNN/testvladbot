@@ -1,5 +1,6 @@
 package bot;
 
+import application.Expenses;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 //import org.telegram.telegrambots.ApiContextInitializerext;
@@ -56,7 +57,9 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         String message = update.getMessage().getText();
-        sendMsg(update.getMessage().getChatId().toString(), message);
+        Expenses expenses = new Expenses();
+        expenses.addExpense(message);
+//        sendMsg(update.getMessage().getChatId().toString(), message);
 
 
     }

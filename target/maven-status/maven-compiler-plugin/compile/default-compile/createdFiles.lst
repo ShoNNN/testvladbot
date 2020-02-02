@@ -1,2 +1,7 @@
-bot\PingIP.class
-bot\Bot.class
+application/Server.class
+bot/Bot.class
+bot/PingIP.class
+bot/DBClient.class
+bot/ConnectDatabse.class
+application/Categories.class
+application/Expenses.class
