@@ -12,7 +12,7 @@ public class Expenses {
     String categoryText;
 
     public void addExpense(String str){
-        DBClient.insert("expense", parseAmount(str), getNowFormatted(), parseCategoryName(str));
+        DBClient.insert("expense", parseAmount(str), getNowFormatted(), parseCategoryName(Categories.getCategory(str)));
     }
 
     public void getTodayStatistics(){

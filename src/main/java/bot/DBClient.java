@@ -4,6 +4,8 @@ import application.Expenses;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBClient {
 
@@ -13,10 +15,14 @@ public class DBClient {
 
     public static void main(String[] args) {
 //
-        Expenses expenses = new Expenses();
+//        Expenses expenses = new Expenses();
 //        expenses.addExpense("1234 coffee");
-        System.out.println(expenses.getLast());
+//        System.out.println(expenses.getLast());
 
+        HashMap<String, String> map = selectGetGategoryNameAndAliases();
+        for (Map.Entry<String, String> iterator:map.entrySet()) {
+            System.out.println("key = " + iterator.getKey() + " value = " + iterator.getValue());
+        }
 //        System.out.println(getLastIndex("expense"));
 //        insert("expense", "123", "2020-01-31 14:55:21", "dinner");
 //        delete("expense", getLastIndex("expense"));
@@ -34,10 +40,14 @@ public class DBClient {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "select "+ values[0]+ "from " + tableName + ";";
+            String sql = "select "+ values[0]+ " from " + tableName + ";";
             stmt.executeQuery(sql);
             rs = stmt.getResultSet();
 
+            while (rs.next()){
+                System.out.println(rs);
+//                list.add(rs.getCursorName());
+            }
 
             stmt.close();
             c.commit();
@@ -46,6 +56,32 @@ public class DBClient {
             System.exit(0);
         }
         System.out.println("Select was successfully");
+    }
+
+    public static HashMap<String, String> selectGetGategoryNameAndAliases(){
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            c = ConnectDatabse.getConnection();
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            String sql = "select codename, aliases from category c ;";
+            stmt.executeQuery(sql);
+            rs = stmt.getResultSet();
+
+            while (rs.next()) {
+                map.put(rs.getString(1), rs.getString(2));
+            }
+
+            stmt.close();
+            c.commit();
+        } catch (Exception e) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Select was successfully");
+        return map;
     }
 
     public static String selectGetLast10Expense() {
