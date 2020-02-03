@@ -1,5 +1,6 @@
 package bot;
 
+import application.Categories;
 import application.Expenses;
 
 import java.sql.*;
@@ -19,10 +20,12 @@ public class DBClient {
 //        expenses.addExpense("1234 coffee");
 //        System.out.println(expenses.getLast());
 
-        HashMap<String, String> map = selectGetGategoryNameAndAliases();
-        for (Map.Entry<String, String> iterator:map.entrySet()) {
-            System.out.println("key = " + iterator.getKey() + " value = " + iterator.getValue());
-        }
+//        System.out.println(Categories.getCategory("автобус"));
+//        HashMap<String, String> map = selectGetGategoryNameAndAliases();
+//        for (Map.Entry<String, String> iterator:map.entrySet()) {
+//            System.out.println("key = " + iterator.getKey() + " value = " + iterator.getValue());
+//        }
+
 //        System.out.println(getLastIndex("expense"));
 //        insert("expense", "123", "2020-01-31 14:55:21", "dinner");
 //        delete("expense", getLastIndex("expense"));
