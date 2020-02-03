@@ -12,8 +12,15 @@ public class Categories {
     String [] aliases;
     static Map<String, String> aliasesMap = null;
 
-    public void loadCategories(){
-
+    public static String loadCategories(){
+        fillAliases();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> iterator: aliasesMap.entrySet()) {
+            String key = iterator.getKey();
+            String values = iterator.getValue();
+            stringBuilder.append("* " + key + " (" + values + ")\n");
+        }
+        return stringBuilder.toString();
     }
 
     /* fill field aliases array */

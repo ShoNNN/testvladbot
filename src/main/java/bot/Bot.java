@@ -1,5 +1,6 @@
 package bot;
 
+import application.Categories;
 import application.Expenses;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -58,8 +59,10 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Expenses expenses = new Expenses();
         String message = update.getMessage().getText();
-        if (message.equals("/expenses")){
+        if (message.equals("/expenses")) {
             sendMsg(update.getMessage().getChatId().toString(), expenses.getLast());
+        } else if (message.equals("/categories")) {
+            sendMsg(update.getMessage().getChatId().toString(), "Категории трат:\n\n" + Categories.loadCategories());
         } else {
             expenses.addExpense(message);
             sendMsg(update.getMessage().getChatId().toString(), "Добавлены траты " + message);

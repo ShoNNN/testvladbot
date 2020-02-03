@@ -21,6 +21,7 @@ public class DBClient {
 //        System.out.println(expenses.getLast());
 
 //        System.out.println(Categories.getCategory("автобус"));
+//        System.out.print(Categories.loadCategories());
 //        HashMap<String, String> map = selectGetGategoryNameAndAliases();
 //        for (Map.Entry<String, String> iterator:map.entrySet()) {
 //            System.out.println("key = " + iterator.getKey() + " value = " + iterator.getValue());
