@@ -17,7 +17,7 @@ public class Categories {
     }
 
     /* fill field aliases array */
-    public void fillAliases(){
+    public static void fillAliases(){
         aliasesMap = DBClient.selectGetGategoryNameAndAliases();
     }
 
@@ -27,6 +27,7 @@ public class Categories {
 
     /* returns a category according to one of its aliases */
     public static String getCategory(String categoryName){
+        fillAliases();
         String result = null;
         for (Map.Entry<String, String> iterator: aliasesMap.entrySet()) {
             String key = iterator.getKey();
@@ -34,8 +35,6 @@ public class Categories {
             for (String str:array) {
                 if (categoryName.toLowerCase().equals(str.toLowerCase())){
                     result = key;
-                } else {
-                    result = "other";
                 }
             }
         }
